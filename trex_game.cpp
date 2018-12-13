@@ -169,8 +169,8 @@ void display_road(){
 }
 void animate_trex(int value){
 	if(flag == 1){
-		double v = 9;
-		double tmp = v - 5.2*(2*t);
+		double v = 12;
+		double tmp = v - 8*(2*t);
 		trex_height += tmp;
 		// printf("%lf\n",trex_height);
 		t+=0.02;
@@ -214,19 +214,7 @@ void display(){
 	glutSwapBuffers();
 }
 void key_press(unsigned char key,int x,int y){
-	if(key==GLUT_KEY_RIGHT){
-		rot_y -= 5;
-	}
-	else if(key==GLUT_KEY_LEFT){
-		rot_y +=5;
-	}
-	else if(key==GLUT_KEY_UP){
-		rot_x +=5;
-	}
-	else if(key==GLUT_KEY_DOWN){
-		rot_x -=5;
-	}
-	else if(key==' '){
+	if(key==' '){
 		if(flag == 0){
 			t = 0.2;
 			flag = 1;
@@ -238,7 +226,7 @@ int main(int argc,char* argv[]){
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(500,500);
-	glutCreateWindow("le jaye tujhe jahan hawaein");
+	glutCreateWindow("Trex-game");
 	glEnable(GL_DEPTH_TEST);
 	init2D(1,1,1);
 	srand(time(NULL));
