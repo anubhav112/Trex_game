@@ -43,6 +43,7 @@ struct cac{
 Queue<struct cac>q;
 int rot_x = 0;
 int rot_y = 0;
+int rot_sun = 0;
 double trex_height = -300;
 int trex_length = 80;
 int trex_breadth = 40;
@@ -50,6 +51,7 @@ int flag = 0;
 int sub = 5;
 double t = 0;
 int score = 0;
+int min_distance = 300;
 void draw_cactus(int x,int breadth,int length){
 	glColor3f(0.1,0.6,0.2);
 	int y = -300;
@@ -75,6 +77,30 @@ int check_collision(){
 	}
 	return fl;
 }
+void draw_sun(){
+	double r = 0;
+	double theta = 0;
+	int i;
+	glPushMatrix();
+	glTranslatef(300/500.0,300/500.0,0/500.0);
+	glRotatef(rot_sun,0.0,0.0,1.0);
+	glLineWidth(1.5);
+	glBegin(GL_LINE_STRIP);
+		glColor3f(0.95,0.7,0.05);
+		for(i=0;i<185;i++){
+			double theta_rad = (PI/180.0)*theta;
+			double x = r*cos(theta_rad);
+			double y = r*sin(theta_rad);
+			double z = 0;
+			glVertex3f(x/500.0,y/500.0,z/500.0);
+			theta+=10;
+			r = r+0.5;
+		}
+	glEnd();
+	glPopMatrix();
+	rot_sun++;
+	glutPostRedisplay();
+}
 void display_obstacle(int value){
 	int front = q.Front;
 	int rear = q.Rear;
@@ -91,15 +117,22 @@ void display_obstacle(int value){
 	}
 	int k = check_collision();
 	if(k == 1){
-		printf("Your Score is: %d\n", score);
+		printf("Your Final Score is: %d\n", score);
 		printf("Game Over\n");
 		exit(1);
 	}
 	if(q.front().x + q.front().breadth < -500){
 		q.pop();
 		score++;
+		if(score%10==0){
+			printf("Checkpoint Score: %d\n",score);
+		}
+		if(score%10==0){
+			sub++;
+			min_distance+=50;
+		}
 		int last_x = q.rear().x;
-		int random_x = rand()%400 + 300;
+		int random_x = rand()%400 + min_distance;
 		int random_breadth = rand()%30 + 30;
 		int random_length = rand()%40 + 50;
 		q.push({last_x + random_x,random_breadth,random_length});
@@ -111,6 +144,7 @@ void display_road(){
 	int x = 500;
 	int y = -300;
 	int z = 0;
+	draw_sun();
 	glBegin(GL_POLYGON);
 		glColor3f(0.9,0.95,0.95);
 		glVertex3f(-x/500.0,500.0/500.0,(z+1)/500.0);
